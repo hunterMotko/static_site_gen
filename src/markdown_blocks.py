@@ -1,7 +1,7 @@
 from enum import Enum
-from src.parentnode import ParentNode
-from src.textnode import text_node_to_html_node, TextNode, TextType
-from src.inline_blocks import text_to_textnodes
+from parentnode import ParentNode
+from textnode import text_node_to_html_node, TextNode, TextType
+from inline_blocks import text_to_textnodes
 
 
 class BlockType(Enum):
