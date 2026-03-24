@@ -11,8 +11,8 @@ def main():
     content_dir = "./content"
     template_file = "./template.html"
     basepath = "/"
-    if len(sys.argv) > 0:
-        basepath = sys.argv[0]
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
 
     if os.path.exists(dir_path_public):
         shutil.rmtree(dir_path_public)
