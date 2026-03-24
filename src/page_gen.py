@@ -2,10 +2,7 @@ import os
 from markdown_blocks import markdown_to_html_node
 
 
-def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {
-          dest_path} using {template_path}")
-
+def generate_page(from_path, template_path, dest_path, basepath):
     with open(from_path, 'r') as f:
         markdown_content = f.read()
     with open(template_path, 'r') as f:
@@ -13,11 +10,12 @@ def generate_page(from_path, template_path, dest_path):
 
     html_node = markdown_to_html_node(markdown_content)
     content_html = html_node.to_html()
-
     title = extract_title(markdown_content)
 
     full_html = template.replace("{{ Title }}", title).replace(
         "{{ Content }}", content_html)
+    full_html = full_html.replace('href="/', f'href="{basepath}')
+    full_html = full_html.replace('src="/', f'src="{basepath}')
 
     dest_dir = os.path.dirname(dest_path)
     if dest_dir != "":
@@ -35,7 +33,7 @@ def extract_title(markdown):
     raise Exception("No h1 header found in markdown")
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     entries = os.listdir(dir_path_content)
     for entry in entries:
         from_path = os.path.join(dir_path_content, entry)
@@ -43,6 +41,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         if os.path.isfile(from_path):
             if from_path.endswith(".md"):
                 html_dest_path = dest_path.replace(".md", ".html")
-                generate_page(from_path, template_path, html_dest_path)
+                generate_page(from_path, template_path,
+                              html_dest_path, basepath)
         else:
-            generate_pages_recursive(from_path, template_path, dest_path)
+            generate_pages_recursive(
+                from_path, template_path, dest_path, basepath)
